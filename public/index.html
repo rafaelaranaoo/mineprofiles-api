@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f766e" />
+    <title>MineProfiles</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Minecraft profiles</p>
+        <h1>MineProfiles</h1>
+      </div>
+      <div class="status" id="statusBadge">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Conectando</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="workspace">
+        <form class="import-panel" id="importForm">
+          <div class="field-group primary-field">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="off"
+              placeholder="Notch"
+              minlength="3"
+              maxlength="16"
+              required
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="tags">Tags</label>
+            <input id="tags" name="tags" type="text" placeholder="classic, mojang" />
+          </div>
+
+          <div class="field-group notes-field">
+            <label for="notes">Notas</label>
+            <input id="notes" name="notes" type="text" maxlength="500" placeholder="Observacao curta" />
+          </div>
+
+          <label class="toggle">
+            <input id="favorite" name="favorite" type="checkbox" />
+            <span>Favorito</span>
+          </label>
+
+          <div class="actions">
+            <button class="button ghost" type="button" id="lookupButton">
+              <span aria-hidden="true">?</span>
+              Buscar
+            </button>
+            <button class="button solid" type="submit">
+              <span aria-hidden="true">+</span>
+              Importar
+            </button>
+          </div>
+        </form>
+
+        <section class="lookup-result" id="lookupResult" hidden></section>
+
+        <div class="toolbar">
+          <div class="field-group">
+            <label for="search">Busca local</label>
+            <input id="search" type="search" placeholder="username, nota..." />
+          </div>
+          <div class="field-group compact">
+            <label for="tagFilter">Tag</label>
+            <input id="tagFilter" type="text" placeholder="classic" />
+          </div>
+          <label class="toggle">
+            <input id="favoriteFilter" type="checkbox" />
+            <span>So favoritos</span>
+          </label>
+          <button class="icon-button" type="button" id="refreshButton" title="Atualizar lista" aria-label="Atualizar lista">
+            <span aria-hidden="true">&#8635;</span>
+          </button>
+        </div>
+
+        <div class="summary" id="summary">Carregando jogadores...</div>
+        <section class="player-grid" id="playerGrid" aria-live="polite"></section>
+      </section>
+    </main>
+
+    <template id="playerTemplate">
+      <article class="player-card">
+        <div class="avatar-wrap">
+          <img class="avatar" alt="" />
+        </div>
+        <div class="player-main">
+          <div class="player-heading">
+            <div>
+              <h2></h2>
+              <p class="uuid"></p>
+            </div>
+            <button class="favorite-button" type="button" title="Alternar favorito" aria-label="Alternar favorito"></button>
+          </div>
+          <p class="notes"></p>
+          <div class="tag-list"></div>
+          <dl class="meta">
+            <div>
+              <dt>Skin</dt>
+              <dd class="skin"></dd>
+            </div>
+            <div>
+              <dt>Atualizado</dt>
+              <dd class="updated"></dd>
+            </div>
+          </dl>
+          <div class="card-actions">
+            <button class="button ghost sync-button" type="button">
+              <span aria-hidden="true">&#8635;</span>
+              Sync
+            </button>
+            <button class="button danger delete-button" type="button">
+              <span aria-hidden="true">&times;</span>
+              Excluir
+            </button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

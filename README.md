@@ -52,6 +52,18 @@ A API ficara disponivel em:
 http://localhost:3000
 ```
 
+Frontend simples:
+
+```txt
+http://localhost:3000
+```
+
+Informacoes da API:
+
+```txt
+GET http://localhost:3000/api
+```
+
 Health check:
 
 ```txt
@@ -70,6 +82,19 @@ Suba um MongoDB local e crie um arquivo `.env` baseado no `.env.example`.
 
 ```bash
 npm install
+npm run dev
+```
+
+Se a porta 3000 ja estiver em uso, execute com outra porta:
+
+```bash
+PORT=3001 npm run dev
+```
+
+No Windows PowerShell:
+
+```powershell
+$env:PORT = "3001"
 npm run dev
 ```
 
