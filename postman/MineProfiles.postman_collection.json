@@ -1,0 +1,137 @@
+{
+  "info": {
+    "name": "MineProfiles API",
+    "_postman_id": "d65d71e4-08db-4e70-9bb0-7e1ca3b78e21",
+    "description": "Collection para testar a API REST de perfis Minecraft com Mojang API e MongoDB.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "player_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/health"
+      }
+    },
+    {
+      "name": "Docs - OpenAPI JSON",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/docs/openapi.json"
+      }
+    },
+    {
+      "name": "List players",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/players?page=1&limit=10"
+      }
+    },
+    {
+      "name": "Lookup Mojang player without saving",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/players/lookup/Notch"
+      }
+    },
+    {
+      "name": "Import Mojang player",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"favorite\": true,\n  \"notes\": \"Importado da Mojang API\",\n  \"tags\": [\"mojang\", \"classic\"]\n}"
+        },
+        "url": "{{base_url}}/players/import/Notch"
+      }
+    },
+    {
+      "name": "Create player manually",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"jeb_\",\n  \"uuid\": \"853c80ef3c3749fdaa49938b674adae6\",\n  \"favorite\": false,\n  \"notes\": \"Criado manualmente\",\n  \"tags\": [\"developer\"]\n}"
+        },
+        "url": "{{base_url}}/players"
+      }
+    },
+    {
+      "name": "Get player by id",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/players/{{player_id}}"
+      }
+    },
+    {
+      "name": "Replace player",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"jeb_\",\n  \"uuid\": \"853c80ef3c3749fdaa49938b674adae6\",\n  \"displayName\": \"jeb_\",\n  \"favorite\": false,\n  \"notes\": \"Substituido via PUT\",\n  \"tags\": [\"developer\", \"put\"]\n}"
+        },
+        "url": "{{base_url}}/players/{{player_id}}"
+      }
+    },
+    {
+      "name": "Patch player",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"favorite\": true,\n  \"tags\": [\"favorito\", \"mojang\"]\n}"
+        },
+        "url": "{{base_url}}/players/{{player_id}}"
+      }
+    },
+    {
+      "name": "Sync player with Mojang",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/players/{{player_id}}/sync"
+      }
+    },
+    {
+      "name": "Delete player",
+      "request": {
+        "method": "DELETE",
+        "url": "{{base_url}}/players/{{player_id}}"
+      }
+    }
+  ]
+}
