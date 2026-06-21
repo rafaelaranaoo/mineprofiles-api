@@ -76,9 +76,29 @@ OpenAPI JSON:
 GET http://localhost:3000/docs/openapi.json
 ```
 
+O documento OpenAPI apresenta, para todas as rotas:
+
+- Verbo HTTP e caminho completo.
+- Descricao da operacao.
+- Path params e query params.
+- Exemplos de body para POST, PUT e PATCH.
+- Exemplos JSON de respostas de sucesso e erro.
+- Codigos de status HTTP possiveis.
+
 ## Como rodar localmente
 
 Suba um MongoDB local e crie um arquivo `.env` baseado no `.env.example`.
+
+Variaveis externas obrigatorias:
+
+```txt
+MONGO_URI
+MOJANG_API_BASE_URL
+MOJANG_SESSION_BASE_URL
+```
+
+As strings de conexao e URLs externas sao carregadas exclusivamente do ambiente e nao
+possuem fallback hardcoded no codigo.
 
 ```bash
 npm install
@@ -295,8 +315,18 @@ Importe o arquivo:
 postman/MineProfiles.postman_collection.json
 ```
 
-Crie ou mantenha a variavel:
+A collection inclui todas as rotas, descricoes, bodies, respostas salvas e scripts de teste.
+
+Variaveis da collection:
 
 ```txt
 base_url = http://localhost:3000
+player_id = preenchido automaticamente pelas requisicoes de create/import
 ```
+
+Fluxo recomendado:
+
+1. Execute `Import Mojang player` ou `Create player manually`.
+2. O script salva automaticamente o ID retornado em `player_id`.
+3. Execute GET por ID, PUT, PATCH, sync e DELETE.
+4. Os testes verificam se o status esta documentado e se a resposta e JSON valido.

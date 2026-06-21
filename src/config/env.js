@@ -2,11 +2,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+function requiredEnv(name) {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`Variavel de ambiente obrigatoria ausente: ${name}`);
+  }
+
+  return value;
+}
+
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT || 3000),
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/mineprofiles',
-  mojangApiBaseUrl: process.env.MOJANG_API_BASE_URL || 'https://api.mojang.com',
-  mojangSessionBaseUrl:
-    process.env.MOJANG_SESSION_BASE_URL || 'https://sessionserver.mojang.com'
+  mongoUri: requiredEnv('MONGO_URI'),
+  mojangApiBaseUrl: requiredEnv('MOJANG_API_BASE_URL'),
+  mojangSessionBaseUrl: requiredEnv('MOJANG_SESSION_BASE_URL')
 };
