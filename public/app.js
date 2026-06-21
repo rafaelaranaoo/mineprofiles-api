@@ -81,8 +81,85 @@ async function checkHealth() {
   }
 }
 
-function playerAvatar(player) {
-  return `https://crafatar.com/avatars/${player.uuid}?size=96&overlay`;
+function secureTextureUrl(url) {
+  return typeof url === 'string' ? url.replace(/^http:/, 'https:') : '';
+}
+
+function renderSkinPreview(canvas, player) {
+  const textureUrl = secureTextureUrl(player.mojang?.skinUrl);
+  const wrapper = canvas.closest('.avatar-wrap');
+  const fallback = wrapper.querySelector('.skin-fallback');
+  const label = `${player.displayName || player.username} skin`;
+
+  canvas.setAttribute('aria-label', label);
+  fallback.textContent = (player.displayName || player.username).slice(0, 2);
+
+  if (!textureUrl) {
+    wrapper.classList.add('is-error');
+    return;
+  }
+
+  const image = new Image();
+  image.decoding = 'async';
+
+  image.addEventListener('load', () => {
+    const context = canvas.getContext('2d');
+    const scale = 4;
+    const slim = player.mojang?.skinVariant === 'slim';
+    const armWidth = slim ? 3 : 4;
+    const rightArmX = slim ? 1 : 0;
+    const leftArmX = 12;
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.imageSmoothingEnabled = false;
+
+    const draw = (sx, sy, sw, sh, dx, dy, dw = sw, dh = sh) => {
+      context.drawImage(
+        image,
+        sx,
+        sy,
+        sw,
+        sh,
+        dx * scale,
+        dy * scale,
+        dw * scale,
+        dh * scale
+      );
+    };
+
+    draw(8, 8, 8, 8, 4, 0);
+    draw(20, 20, 8, 12, 4, 8);
+    draw(44, 20, armWidth, 12, rightArmX, 8);
+    draw(4, 20, 4, 12, 4, 20);
+
+    if (image.naturalHeight >= 64) {
+      draw(36, 52, armWidth, 12, leftArmX, 8);
+      draw(20, 52, 4, 12, 8, 20);
+    } else {
+      draw(44, 20, armWidth, 12, leftArmX, 8);
+      draw(4, 20, 4, 12, 8, 20);
+    }
+
+    draw(40, 8, 8, 8, 4, 0);
+
+    if (image.naturalHeight >= 64) {
+      draw(20, 36, 8, 12, 4, 8);
+      draw(44, 36, armWidth, 12, rightArmX, 8);
+      draw(52, 52, armWidth, 12, leftArmX, 8);
+      draw(4, 36, 4, 12, 4, 20);
+      draw(4, 52, 4, 12, 8, 20);
+    }
+
+    wrapper.classList.remove('is-error');
+    wrapper.classList.add('is-loaded');
+  });
+
+  image.addEventListener('error', () => {
+    wrapper.classList.remove('is-loaded');
+    wrapper.classList.add('is-error');
+  });
+
+  image.src = textureUrl;
 }
 
 function formatDate(value) {
@@ -121,7 +198,7 @@ function renderPlayers() {
 
   for (const player of state.players) {
     const node = els.template.content.firstElementChild.cloneNode(true);
-    const avatar = node.querySelector('.avatar');
+    const skinPreview = node.querySelector('.skin-preview');
     const title = node.querySelector('h2');
     const uuid = node.querySelector('.uuid');
     const notes = node.querySelector('.notes');
@@ -132,8 +209,7 @@ function renderPlayers() {
     const syncButton = node.querySelector('.sync-button');
     const deleteButton = node.querySelector('.delete-button');
 
-    avatar.src = playerAvatar(player);
-    avatar.alt = `${player.displayName || player.username} avatar`;
+    renderSkinPreview(skinPreview, player);
     title.textContent = player.displayName || player.username;
     uuid.textContent = player.uuid;
     notes.textContent = player.notes || 'Sem notas.';
